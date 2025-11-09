@@ -1,37 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Firebase CRUD Task App
 
-## Getting Started
+A protected CRUD app built with Next.js (App Router) + TypeScript, Firebase Authentication, and Firestore. Authenticated users can create, read, update, and delete their own tasks. The dashboard greets the user by email and all operations run against Firestore.
 
-First, run the development server:
+## Technologies Used
+
+- Next.js (App Router) + TypeScript
+- Firebase Authentication
+- Cloud Firestore
+- React 19
+
+## Features
+
+- Firebase Authentication (Email/Password)
+- Protected Routes (dashboard only for logged-in users)
+- CRUD Operations (Tasks in Firestore)
+- Personalized Dashboard Greeting (Hello, user@email)
+- Live updates via Firestore onSnapshot subscription
+
+## Project Structure (key files)
+
+- `src/lib/firebase.ts` — Firebase app, `auth`, and `db` setup
+- `src/context/AuthContext.tsx` — Auth provider using `onAuthStateChanged`
+- `src/lib/tasks.ts` — Firestore CRUD helpers
+- `src/types/task.ts` — Task interface and Priority type
+- `src/app/login/page.tsx` — Login page
+- `src/app/register/page.tsx` — Register page
+- `src/app/page.tsx` — Protected Dashboard (TaskForm + TaskList)
+
+## Setup Instructions
+
+1) Clone the repository
+
+```bash
+git clone https://github.com/Boldecca/todoapp-with-auth.git
+cd todoapp-with-auth
+npm install
+```
+
+2) Firebase configuration
+
+Create a Firebase project and enable:
+- Authentication: Email/Password sign-in provider
+- Firestore Database: in production or test mode
+
+Add a web app in Firebase console and copy the config. Provide these env vars (create `.env.local` at project root):
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+```
+
+3) Run the app
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Firestore
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Collection: `tasks`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Fields per document:
 
-## Learn More
+- `title: string`
+- `description: string`
+- `completed: boolean`
+- `priority: "Low" | "Medium" | "High"`
+- `userEmail: string` (owner’s email)
 
-To learn more about Next.js, take a look at the following resources:
+Optional security rules (example) to restrict access by email owner:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{taskId} {
+      allow read, write: if request.auth != null &&
+        request.auth.token.email == resource.data.userEmail;
+    }
+  }
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
 
-## Deploy on Vercel
+1. Register a new account at `/register` (email/password) → redirected to login
+2. Log in at `/login` → redirected to dashboard `/`
+3. On dashboard:
+   - Add tasks with title, description, and priority
+   - Toggle completion via the checkbox
+   - Edit fills the form; submit to update
+   - Delete removes from Firestore and UI
+4. Logout button signs out and redirects to `/login`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment (Vercel)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# todoapp-with-auth
+1. Push to GitHub (ensure env vars are not committed)
+2. Create a new Vercel project from this repo
+3. In Vercel Project Settings → Environment Variables, add the Firebase vars above
+4. Deploy. Your live link will look like: `https://<project>.vercel.app`
+
+Deployment Link: <ADD YOUR LIVE VERCEL LINK HERE>
+
+## Screenshots
+
+- Login page: <add image>
+- Dashboard: <add image>
+
+## Testing Credentials
+
+Please create and share a demo account (ensure it exists in Firebase Authentication):
+
+- Email: `testuser@gmail.com`
+- Password: `test1234`
+
+Add one or two tasks in Firestore under that account for evaluation.

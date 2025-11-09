@@ -114,9 +114,9 @@ Deployment Link: <ADD YOUR LIVE VERCEL LINK HERE>
 
 ## Testing Credentials
 
-Please create and share a demo account (ensure it exists in Firebase Authentication):
+Demo account for evaluation (ensure it exists in Firebase Authentication):
 
-- Email: `testuser@gmail.com`
-- Password: `test1234`
+- Email: `muteterirebecca60@gmail.com`
+- Password: `kabebe19`
 
 Add one or two tasks in Firestore under that account for evaluation.

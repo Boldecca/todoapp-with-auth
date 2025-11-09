@@ -6,8 +6,11 @@ import { useAuth } from "@/context/AuthContext";
 export default function RegisterPage() {
   const { register } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const demoEmail = process.env.NEXT_PUBLIC_DEMO_EMAIL ?? "";
+  const demoPassword = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "";
+  const isProd = process.env.NODE_ENV === "production";
+  const [email, setEmail] = useState(!isProd ? demoEmail : "");
+  const [password, setPassword] = useState(!isProd ? demoPassword : "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 

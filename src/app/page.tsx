@@ -52,12 +52,18 @@ export default function DashboardPage() {
     if (editing?.id === t.id) setEditing(null);
   }
 
-  if (!user && loading) {
+  // Avoid flashing the dashboard before redirect by gating rendering
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>Loading...</p>
       </div>
     );
+  }
+
+  if (!user) {
+    // Redirect is handled by useEffect; render nothing to prevent flash
+    return null;
   }
 
   return (

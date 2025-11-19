@@ -100,12 +100,17 @@ service cloud.firestore {
 
 ## Deployment (Vercel)
 
+1. Push to GitHub (ensure env vars are not committed)
+2. Create a new Vercel project from this repo
+3. In Vercel Project Settings → Environment Variables, add the Firebase vars above
+4. Deploy. Your live link will look like: `https://<project>.vercel.app`
+
 Deployment Link: todoapp-with-auth-ooqz.vercel.app/
 
 ## Screenshots
 
-- Login page: ![alt text](image-2.png)
-- Dashboard: ![alt text](image-1.png)
+- Login page: <add image>
+- Dashboard: <add image>
 
 ## Testing Credentials
 
